@@ -5,6 +5,7 @@
   >
     <div class="pager">
       <a
+        v-if="start > 1"
         :aria-disabled="start > 1"
         :class="start > 1? '': 'disabled'"
         :title="start > 1? `Prev page of ${itemName}`: 'No prior pages.'"
@@ -12,11 +13,18 @@
       >
         <LeftArrowIcon />
       </a>
+      <div
+        v-else
+        class="disabled"
+      >
+        <LeftArrowIcon />
+      </div>
       <div class="pager-description">
         <b v-if="start !== end">{{ start }} to {{ end }}</b>
         <b v-else> {{ start }}</b> of {{ total }} {{ itemName }}
       </div>
       <a
+        v-if="end !== total"
         :aria-disabled="end === total"
         :class="end !== total? '': 'disabled'"
         :title="end !== total ? `Next page of ${itemName}`: 'No more pages'"
@@ -24,6 +32,12 @@
       >
         <RightArrowIcon />
       </a>
+      <div
+        v-else
+        class="disabled"
+      >
+        <RightArrowIcon />
+      </div>
     </div>
   </div>
 </template>
@@ -96,12 +110,11 @@ a {
   &:hover {
     color: #6e9df1
   }
-
-  &.disabled {
-    color: #A6C6FF;
-    cursor: not-allowed;
-    opacity: 0.5;
-    text-decoration: none;
-  }
+}
+.disabled {
+  color: #A6C6FF;
+  cursor: not-allowed;
+  opacity: 0.5;
+  text-decoration: none;
 }
 </style>
