@@ -1,3 +1,69 @@
+# Tim's Notes
+
+First off, wow. `vue` has some strengths compared to `react`
+
+## Design Considerations
+Note: To make this list easy to digest, the considerations will be listed from the top of page down. These are not in order of importance
+
+### Global
+- Mobile first and responsive
+
+### Nav
+- Text from links drops when in mobile to accomodate all links (would implement hamburger menu if more items present)
+- Links have a minor hover state, but don't trigger any action/location
+- User is shown as logged in, this would need to be dynamic in full mock
+
+### Header
+- Search and Button align to the grid on larger screens (as seen in comp)
+- "+ Service Package" fires off an alert, but doesn't create the package
+- Search
+  - Typing is debounced to make sure the api is called only after input complete
+  - Search updates the query parameters and respects query parameter for reload. Also, resets page to first page on new values to make sure the services load properly
+  - The search does not have keyboard submit or an action button.
+
+### Cards
+- Cards are in a 3 column grid using CSS `grid`
+- Versions:
+  - Clickable to show versions table 
+    - Version table
+      - It is its own component to allow for re-use if on individual service page 
+      - Structured as a table with custom CSS to display nicer on mobile
+      - Sorted: The table is sorted by updated date in descending order because version numbers are fickle. Ideally: 1) the api returned a created_date, since updated_date might mean the description was updated but the release was created earlier. 2) The table has sortable header
+- Title:
+  - Click: Navigates to landing page with ideas
+- Metrics:
+  - Click: Navigates to docs, but could go separate metric dashboard page.
+  - Hover: Shows error bounds
+  - Coloring: As discussed with Henri, these are made up thresholds that ideally would be configurable or described in the docs. Example: "Uptime below 99.99% is a warning."
+  - If the service has not been configured, then "not configured with runtime" is shown in place
+  - Each metric is an SFC to allow for reusablilty, unique linking (if desired). This also allows for some flexibility down the line if different service types show different metrics.
+- Developer Stack
+  - Click: Navigates to developer landing page.
+  - Hover: Shows name of developer
+  - Sorted by: Version updated_date, ie: the latest version developer shows on the right, then the next developer to the left, and then number of unique developers (excluding the developers displayed) to the left of that.
+
+### Pager
+- Hidden if only one page
+- When on last page, if there only one item text reads "55 of 55 services" instead of "55 to 55 of 55 Services" because that looks weird.
+- Buttons are disabled and unclickable when no previous or next items
+- Click: ?page is updated in query parameter 
+
+## Other Considerations
+- useServices:
+  - Added types to make it easier to work with. They are exported from this file, because they would likely be updated with this api call.
+  - This composable used local refs but could use a Pinia with slightly more time
+  - The pagination and search are contained here because 
+    1) the api might support pagination down the road vs client side 
+    1) The search/page are linked, so that when the search changes the page changes and the results update
+    1) It keeps the logic all contained and out of the component allowing for future easy reuse.
+- I used the Composability API with `<script setup>` to help with typescript.
+- I personally like a more opinionated formatter like `prettier` or `biomejs`, but didn't want to deal with eslint config. 
+- Colors/Base Styles/Fonts: The site desperately a base style guide to extend. This would help standardize colors, fonts, etc.
+- More tests are needed, but I wrote a couple.
+
+# Overall
+I'm pretty happy with where it is at for being my first `vue` project and would love some code review to help make sure it is fully up to 
+
 # Welcome
 
 Please take the time to read through all of the sections below; we want you to do great! :rocket:
