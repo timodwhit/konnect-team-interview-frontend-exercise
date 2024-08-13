@@ -6,9 +6,8 @@
     <div class="pager">
       <a
         v-if="start > 1"
-        :aria-disabled="start > 1"
-        :class="start > 1? '': 'disabled'"
-        :title="start > 1? `Prev page of ${itemName}`: 'No prior pages.'"
+        data-testid="prev-page-link"
+        :title="`Prev page of ${itemName}`"
         @click="prev"
       >
         <LeftArrowIcon />
@@ -16,18 +15,21 @@
       <div
         v-else
         class="disabled"
+        data-testid="prev-page-disabled"
       >
         <LeftArrowIcon />
       </div>
-      <div class="pager-description">
+      <div
+        class="pager-description"
+        data-testid="pager-text"
+      >
         <b v-if="start !== end">{{ start }} to {{ end }}</b>
         <b v-else> {{ start }}</b> of {{ total }} {{ itemName }}
       </div>
       <a
         v-if="end !== total"
-        :aria-disabled="end === total"
-        :class="end !== total? '': 'disabled'"
-        :title="end !== total ? `Next page of ${itemName}`: 'No more pages'"
+        data-testid="next-page-link"
+        :title=" `Next page of ${itemName}`"
         @click="next"
       >
         <RightArrowIcon />
@@ -35,6 +37,7 @@
       <div
         v-else
         class="disabled"
+        data-testid="next-page-disabled"
       >
         <RightArrowIcon />
       </div>

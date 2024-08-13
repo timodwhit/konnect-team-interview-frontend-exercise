@@ -7,7 +7,7 @@
       <div class="header">
         <div
           class="publish-state"
-          data-test="published-state"
+          data-testid="published-state"
         >
           <span>
             <img
@@ -23,7 +23,7 @@
         >
           <div
             class="version-button"
-            data-test="versions"
+            data-testid="versions"
             @click="versionClick"
           >
             {{ service?.versions.length === 1 ? service.versions.length + ' version' : service.versions.length + ' versions' }}
@@ -33,7 +33,7 @@
       <div class="info">
         <h2
           class="name"
-          data-test="name"
+          data-testid="name"
         >
           <RouterLink :to="`/service/${service.id}`">
             {{ service.name }}
@@ -41,7 +41,7 @@
         </h2>
         <p
           class="description"
-          data-test="description"
+          data-testid="description"
         >
           {{ service.description }}
         </p>
@@ -50,11 +50,11 @@
     <div class="bottom">
       <ServiceMetrics
         :configured="service?.configured"
-        data-test="metrics"
+        data-testid="metrics"
         :metrics="service?.metrics"
       />
       <DeveloperAvatarStack
-        data-test="developers"
+        data-testid="developers"
         :developers="developers"
       />
     </div>
@@ -66,6 +66,7 @@ import type { Developer, Service } from '@/composables/useServices'
 import ServiceMetrics from '@/components/service/ServiceMetrics.vue'
 import { computed } from 'vue'
 import DeveloperAvatarStack from '../common/DeveloperAvatarStack.vue'
+import { RouterLink } from 'vue-router'
 
 const props = defineProps<{ service: Service }>()
 // Compute the developers of the service.

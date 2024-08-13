@@ -1,7 +1,8 @@
-import { mount, shallowMount } from '@vue/test-utils'
 import ServiceCard from './ServiceCard.vue'
 import { expect, test } from 'vitest'
 import type { Service } from '@/composables/useServices'
+import { describe } from 'node:test'
+import { RouterLinkStub, shallowMount } from '@vue/test-utils'
 
 const service: Service = {
   'id': 'c43a5117-4c15-4cbf-8f40-869a6cb995fd',
@@ -31,112 +32,284 @@ const service: Service = {
     'errors': 0.075,
   },
 }
-test('shows title and description', async () => {
-  const wrapper = shallowMount(ServiceCard, {
-    props: {
-      service,
-    },
-    stubs: ['router-link'],
-  })
-  const name = wrapper.get('[data-test="name"]')
-  expect(name.text()).toBe(service.name)
-  const description = wrapper.get('[data-test="description"]')
-  expect(description.text()).toBe(service.description)
-})
-test('unpublished and configured', async () => {
-  const wrapper = mount(ServiceCard, {
-    props: {
-      service: { ...service, published: false, configured: true },
 
-    },
+describe('ServiceCard tests', () => {
+  const stubs = {
+    RouterLink: RouterLinkStub,
+  }
+  test('title and description show', async () => {
+    const wrapper = shallowMount(ServiceCard, {
+      props: {
+        service,
+      },
+      stubs,
+    })
+    expect(wrapper.findTestId('name').isVisible()).toBe(true)
+    const description = wrapper.findTestId('description')
+    expect(description.text()).toBe(service.description)
   })
-  const name = wrapper.get('[data-test="published-state"]')
-  expect(name.text()).toBe('Unpublished')
-})
+  test('status when not published and configured', async () => {
+    const wrapper = shallowMount(ServiceCard, {
+      props: {
+        service: { ...service, published: false, configured: true },
+      },
+      stubs,
+    })
+    const name = wrapper.findTestId('published-state')
+    expect(name.text()).toBe('Unpublished')
+  })
 
-test('published and configured', async () => {
-  const wrapper = mount(ServiceCard, {
-    props: {
-      service: { ...service, published: true, configured: true },
-    },
+  test('status when not published and not configured', async () => {
+    const wrapper = shallowMount(ServiceCard, {
+      props: {
+        service: { ...service, published: false, configured: false },
+      },
+      stubs,
+    })
+    const name = wrapper.findTestId('published-state')
+    expect(name.text()).toBe('In progress')
   })
-  const name = wrapper.get('[data-test="published-state"]')
-  expect(name.text()).toBe('Published to portal')
-})
-test('unpublished and not configured', async () => {
-  const wrapper = mount(ServiceCard, {
-    props: {
-      service: { ...service, published: false, configured: false },
-    },
+  test('status when published and configured', async () => {
+    const wrapper = shallowMount(ServiceCard, {
+      props: {
+        service: { ...service, published: true, configured: true },
+      },
+      stubs,
+    })
+    const name = wrapper.findTestId('published-state')
+    expect(name.text()).toBe('Published to portal')
   })
-  const name = wrapper.get('[data-test="published-state"]')
-  expect(name.text()).toBe('In progress')
-})
-test('published and not configured', async () => {
-  const wrapper = mount(ServiceCard, {
-    props: {
-      service: { ...service, published: true, configured: false },
-    },
+  test('status when published and not configured', async () => {
+    const wrapper = shallowMount(ServiceCard, {
+      props: {
+        service: { ...service, published: true, configured: false },
+      },
+      stubs,
+    })
+    const name = wrapper.findTestId('published-state')
+    expect(name.text()).toBe('In progress')
   })
-  const name = wrapper.get('[data-test="published-state"]')
-  expect(name.text()).toBe('In progress')
-})
-test('default versions', async () => {
-  const wrapper = mount(ServiceCard, {
-    props: {
-      service,
-    },
+  test('versions show correct count', async () => {
+    const wrapper = shallowMount(ServiceCard, {
+      props: {
+        service,
+      },
+      stubs,
+    })
+    const name = wrapper.findTestId('versions')
+    expect(name.text()).toBe('2 versions')
   })
-  const name = wrapper.get('[data-test="versions"]')
-  expect(name.text()).toBe('2 versions')
-})
-test('no versions on service', async () => {
-  const wrapper = mount(ServiceCard, {
-    props: {
-      service: { ...service, versions: undefined },
-    },
+  test('versions when no versions', async () => {
+    const wrapper = shallowMount(ServiceCard, {
+      props: {
+        service: { ...service, versions: undefined },
+      },
+      stubs,
+    })
+    expect(wrapper.findTestId('versions').exists()).toBeFalsy()
   })
-  expect(wrapper.findAll('[data-test="versions"]')).toHaveLength(0)
-})
-test('1 versions', async () => {
-  const wrapper = mount(ServiceCard, {
-    props: {
-      service: { ...service, versions: [...service.versions].slice(0,1) },
-    },
+  test('versions with 1 version show singular text', async () => {
+    const wrapper = shallowMount(ServiceCard, {
+      props: {
+        service: { ...service, versions: [...service.versions].slice(0,1) },
+      },
+      stubs,
+    })
+    const name = wrapper.findTestId('versions')
+    expect(name.text()).toBe('1 version')
   })
-  const name = wrapper.get('[data-test="versions"]')
-  expect(name.text()).toBe('1 version')
-})
-test('empty versions array', async () => {
-  const wrapper = mount(ServiceCard, {
-    props: {
-      service: { ...service, versions: [] },
-    },
+  test('versions with empty versions array', async () => {
+    const wrapper = shallowMount(ServiceCard, {
+      props: {
+        service: { ...service, versions: [] },
+      },
+      stubs,
+    })
+    expect(wrapper.findTestId('versions').exists()).toBeFalsy()
   })
-  expect(wrapper.findAll('[data-test="versions"]')).toHaveLength(0)
-})
 
-test('no metrics', async () => {
-  const wrapper = mount(ServiceCard, {
-    props: {
-      service: { ...service, metrics: undefined },
-    },
+  test('metrics with no metrics', async () => {
+    const wrapper = shallowMount(ServiceCard, {
+      props: {
+        service: { ...service, metrics: undefined },
+      },
+      stubs,
+    })
+    expect(wrapper.findTestId('metrics').exists()).toBeTruthy()
   })
-  expect(wrapper.findAll('[data-test="metrics"]')).toHaveLength(1)
-})
-test('metrics exist', async () => {
-  const wrapper = mount(ServiceCard, {
-    props: {
-      service: { ...service },
-    },
+  test('metrics exist', async () => {
+    const wrapper = shallowMount(ServiceCard, {
+      props: {
+        service: { ...service },
+      },
+      stubs,
+    })
+    expect(wrapper.findTestId('metrics').exists()).toBeTruthy()
   })
-  expect(wrapper.findAll('[data-test="metrics"]')).toHaveLength(1)
-})
-test('developers exist', async () => {
-  const wrapper = mount(ServiceCard, {
-    props: {
-      service: { ...service },
-    },
+  test('developers exist', async () => {
+    const wrapper = shallowMount(ServiceCard, {
+      props: {
+        service: { ...service },
+      },
+      stubs,
+    })
+    expect(wrapper.findTestId('developers').exists()).toBeTruthy()
   })
-  expect(wrapper.findAll('[data-test="developers"]')).toHaveLength(1)
+  test('developers: none in versions', () => {
+    const wrapper = shallowMount(ServiceCard, {
+      props: {
+        service: { ...service },
+      },
+      stubs,
+    })
+    // @ts-expect-error TODO: Fix in finalizing.
+    expect(wrapper.vm.developers.length).toBe(0)
+  })
+  test('developers: ordered by versions', () => {
+    const versions = [{
+      'id': '98c5211a-5ad0-4ee0-81dd-ac65ec2f47e7',
+      'name': '2.7.1',
+      'description': 'Realigned client-driven throughput',
+      'developer': {
+        'id': '1',
+        'name': 'Edgar Hessel',
+        'email': 'Edgar.Hessel19@hotmail.com',
+        'avatar': 'https://avatars.githubusercontent.com/u/50583621',
+      },
+      'updated_at': '2024-03-26T04:54:30.043Z',
+    },
+    {
+      'id': 'f415d0d0-80bc-4812-91c2-cd558abb6861',
+      'name': '4.6.7',
+      'description': 'Carbonite web goalkeeper gloves are ergonomically designed to give easy fit',
+      'developer': {
+        'id': '2',
+        'name': 'Jon Treutel',
+        'email': 'Jon.Treutel63@hotmail.com',
+        'avatar': 'https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/76.jpg',
+      },
+      'updated_at': '2024-03-22T05:00:31.213Z',
+    },
+    {
+      'id': '7d3067fc-d8b6-4716-97be-155807642b1c',
+      'name': '8.0.6',
+      'description': 'Advanced mobile hardware',
+      'developer': {
+        'id': '3',
+        'name': 'Cary Wilderman',
+        'email': 'Cary_Wilderman@gmail.com',
+        'avatar': 'https://avatars.githubusercontent.com/u/22076275',
+      },
+      'updated_at': '2024-03-05T03:38:59.448Z',
+    },
+    {
+      'id': '9e5e5d21-d1e5-43b8-942f-9446de7b9893',
+      'name': '8.2.9',
+      'description': 'Innovative value-added moratorium',
+      'developer': {
+        'id': '1',
+        'name': 'Edgar Hessel',
+        'email': 'Edgar.Hessel19@hotmail.com',
+        'avatar': 'https://avatars.githubusercontent.com/u/50583621',
+      },
+      'updated_at': '2024-07-27T13:22:20.979Z',
+    },
+    {
+      'id': '6c77f4e6-24b9-4dc2-b0b7-5ecaf9764315',
+      'name': '0.6.4',
+      'description': 'Secured upward-trending alliance',
+      'developer': {
+        'id': '3',
+        'name': 'Cary Wilderman',
+        'email': 'Cary_Wilderman@gmail.com',
+        'avatar': 'https://avatars.githubusercontent.com/u/22076275',
+      },
+      'updated_at': '2024-04-28T09:55:24.355Z',
+    }]
+    const wrapper = shallowMount(ServiceCard, {
+      props: {
+        service: { ...service, versions: versions },
+      },
+      stubs,
+    })
+    // @ts-expect-error TODO: Fix in finalizing.
+    expect(wrapper.vm.developers.length).toBe(3)
+    // @ts-expect-error TODO: Fix in finalizing.
+    expect(wrapper.vm.developers.map(d => d.id).join(',')).toBe('1,3,2')
+  })
+  test('developers: multiple versions with only 1 developer', () => {
+    const versions = [
+      {
+        'id': '9e5e5d21-d1e5-43b8-942f-9446de7b9893',
+        'name': '8.2.9',
+        'description': 'Innovative value-added moratorium',
+        'developer': {
+          'id': '1',
+          'name': 'Edgar Hessel',
+          'email': 'Edgar.Hessel19@hotmail.com',
+          'avatar': 'https://avatars.githubusercontent.com/u/50583621',
+        },
+        'updated_at': '2024-07-27T13:22:20.979Z',
+      },
+      {
+        'id': '6c77f4e6-24b9-4dc2-b0b7-5ecaf9764315',
+        'name': '0.6.4',
+        'description': 'Secured upward-trending alliance',
+        'developer': {
+          'id': '1',
+          'name': 'Edgar Hessel',
+          'email': 'Edgar.Hessel19@hotmail.com',
+          'avatar': 'https://avatars.githubusercontent.com/u/50583621',
+        },
+        'updated_at': '2024-04-28T09:55:24.355Z',
+      }]
+    const wrapper = shallowMount(ServiceCard, {
+      props: {
+        service: { ...service, versions: versions },
+      },
+      stubs,
+    })
+    // @ts-expect-error TODO: Fix in finalizing.
+    expect(wrapper.vm.developers.length).toBe(1)
+    // @ts-expect-error TODO: Fix in finalizing.
+    expect(wrapper.vm.developers.map(d => d.id).join(',')).toBe('1')
+  })
+  test('developers: multiple versions with ordering by date', () => {
+    const versions = [
+      {
+        'id': '9e5e5d21-d1e5-43b8-942f-9446de7b9893',
+        'name': '8.2.9',
+        'description': 'Innovative value-added moratorium',
+        'developer': {
+          'id': '3',
+          'name': 'Edgar Hessel',
+          'email': 'Edgar.Hessel19@hotmail.com',
+          'avatar': 'https://avatars.githubusercontent.com/u/50583621',
+        },
+        'updated_at': '2020-07-27T13:22:20.979Z',
+      },
+      {
+        'id': '6c77f4e6-24b9-4dc2-b0b7-5ecaf9764315',
+        'name': '0.6.4',
+        'description': 'Secured upward-trending alliance',
+        'developer': {
+          'id': '1',
+          'name': 'Edgar Hessel',
+          'email': 'Edgar.Hessel19@hotmail.com',
+          'avatar': 'https://avatars.githubusercontent.com/u/50583621',
+        },
+        'updated_at': '2024-04-28T09:55:24.355Z',
+      }]
+    const wrapper = shallowMount(ServiceCard, {
+      props: {
+        service: { ...service, versions: versions },
+      },
+      stubs,
+    })
+    // @ts-expect-error TODO: Fix in finalizing.
+    expect(wrapper.vm.developers.length).toBe(2)
+    // @ts-expect-error TODO: Fix in finalizing.
+    expect(wrapper.vm.developers.map(d => d.id).join(',')).toBe('1,3')
+  })
+
 })

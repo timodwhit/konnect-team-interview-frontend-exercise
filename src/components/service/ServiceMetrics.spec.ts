@@ -3,6 +3,7 @@ import { expect, test } from 'vitest'
 import ServiceMetrics from './ServiceMetrics.vue'
 import type { Service } from '@/composables/useServices'
 import ServiceMetric from './ServiceMetric.vue'
+
 const metrics: Service['metrics'] = {
   'latency': 0.51,
   'uptime': 0.9145,

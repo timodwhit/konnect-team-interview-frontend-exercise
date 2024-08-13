@@ -1,5 +1,8 @@
 <template>
-  <header class="nav">
+  <header
+    class="nav"
+    data-testid="header"
+  >
     <router-link
       class="logo"
       to="/"
@@ -35,6 +38,7 @@ import ProfileIcon from '@/components/icons/ProfileIcon.vue'
 
 <style lang="scss" scoped>
 @import "@/assets/scss/variables";
+
 .nav {
   background: linear-gradient(180deg, #09224F 0%, #073382 100%);
   display: flex;
@@ -74,6 +78,7 @@ import ProfileIcon from '@/components/icons/ProfileIcon.vue'
     }
   }
 }
+
 .name {
   display: none;
 
@@ -81,6 +86,4 @@ import ProfileIcon from '@/components/icons/ProfileIcon.vue'
     display: inline;
   }
 }
-
-
 </style>

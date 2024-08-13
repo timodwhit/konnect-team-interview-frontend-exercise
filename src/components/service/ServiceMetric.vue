@@ -2,13 +2,18 @@
   <a
     v-if="metric"
     class="metric"
+    data-testid="metric"
     href="#"
     :title="metric.message"
   >
-    <div :class="'indicator ' + metric.status" />
+    <div
+      :class="'indicator ' + metric.status"
+      data-testid="metric-indicator"
+    />
     <span
       v-for="(stat, index) in metric.stats"
       :key="index"
+      data-testid="metric-stats"
     >
       <span v-if="index > 0">&nbsp;·&nbsp;</span>
       <b>{{ stat.stat }}</b> {{ stat.label }}

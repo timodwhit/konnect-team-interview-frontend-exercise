@@ -1,7 +1,5 @@
 # Tim's Notes
 
-First off, wow. `vue` has some strengths compared to `react`
-
 ## Design Considerations
 Note: To make this list easy to digest, the considerations will be listed from the top of page down. These are not in order of importance
 
@@ -48,6 +46,9 @@ Note: To make this list easy to digest, the considerations will be listed from t
 - Buttons are disabled and unclickable when no previous or next items
 - Click: ?page is updated in query parameter 
 
+### Tests
+- I would have liked to have tests for all components and logic, but time.
+
 ## Other Considerations
 - useServices:
   - Added types to make it easier to work with. They are exported from this file, because they would likely be updated with this api call.
@@ -59,7 +60,7 @@ Note: To make this list easy to digest, the considerations will be listed from t
 - I used the Composability API with `<script setup>` to help with typescript.
 - I personally like a more opinionated formatter like `prettier` or `biomejs`, but didn't want to deal with eslint config. 
 - Colors/Base Styles/Fonts: The site desperately a base style guide to extend. This would help standardize colors, fonts, etc.
-- More tests are needed, but I wrote a couple.
+- More tests are needed, but I wrote a good amount.
 
 # Overall
 I'm pretty happy with where it is at for being my first `vue` project and would love some code review to help make sure it is fully up to 

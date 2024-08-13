@@ -1,20 +1,21 @@
 <template>
-  <a
-    v-if="developer"
+  <RouterLink
     class="avatar"
-    :href="`/developer/${developer.id}`"
+    data-testid="developer-link"
+    :to="`/developer/${developer.id}`"
   >
     <img
       class="avatar-image"
       :src="developer.avatar"
       :title="developer.name"
     >
-  </a>
+  </RouterLink>
 </template>
 
 <script setup lang="ts">
 import type { Developer } from '@/composables/useServices'
-defineProps<{ developer?: Developer }>()
+import { RouterLink } from 'vue-router'
+defineProps<{ developer: Developer }>()
 </script>
 
 <style scoped lang="scss">

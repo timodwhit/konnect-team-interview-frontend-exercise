@@ -75,7 +75,7 @@
   </div>
   <Modal
     v-if="activeService"
-    v-show="activeService "
+    v-show="activeService"
     @close="unsetActiveService"
   >
     <template #header>
