@@ -100,7 +100,7 @@ export default function useServices(): ServiceLoader {
       // Trigger the error
       error.value = {
         severity: 'error',
-        message: err instanceof AxiosError ? err.message: 'Unknown Error: ' + err,
+        message: err instanceof AxiosError ? err.message : 'Unknown Error: ' + err,
       }
     } finally {
       // Reset loading state

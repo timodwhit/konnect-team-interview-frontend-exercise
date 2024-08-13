@@ -21,7 +21,7 @@ type Stat = {
   stat: string;
   label: string;
 }
-export type Status = 'success' |'warn' |'error' | 'disabled'
+export type Status = 'success' | 'warn' | 'error' | 'disabled'
 
 export type ComputedMetric = {
   status: Status;
@@ -45,10 +45,12 @@ defineProps<{ metric: ComputedMetric }>()
   &.disabled {
     --indicator-color: #B6B6BD;
   }
+
   &.warn {
     // @TODO: Ask design for the actual color.
     --indicator-color: orange;
   }
+
   &.error {
     // @TODO: Ask design for the actual color.
     --indicator-color: red;
@@ -64,6 +66,7 @@ defineProps<{ metric: ComputedMetric }>()
   line-height: 1;
   padding: .4rem 0;
   text-decoration: none;
+
   b {
     color: #3C4557;
     padding-right: .5rem
