@@ -68,7 +68,7 @@ export default function useServices(): ServiceLoader {
   const page = ref<number>(Number(route.query.page ?? 0))
   // Initial load will be based on the query parameter.
   // After that the ref will be used and updated the search as needed.
-  const search = useDebouncedRef(route.query.search ?? '')
+  const search = useDebouncedRef(route.query.search ?? '', 300)
 
   // Set the displayed services to the limit
   const setServices = () => {
@@ -144,6 +144,16 @@ export default function useServices(): ServiceLoader {
   watch(search, () => {
     router.push({ query: { ...route.query, search: search.value.length ? search.value : undefined, page: undefined } })
     setSearch()
+  })
+
+  watch(() => route.query, async (newParams) => {
+    // This check validates the state and the query parameters are in line and allows for browser navigation to work.
+    if (newParams.search !== search.value) {
+      search.value = newParams.search ?? ''
+    } else if (Number(newParams.page ?? 0) !== page.value) {
+      page.value = Number(newParams.page ?? 0)
+      setServices()
+    }
   })
 
   // Return stateful data
