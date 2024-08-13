@@ -1,0 +1,5 @@
+// Breakpoints for screens. 
+$breakpoint_med_min: 720px;
+$breakpoint_med_max: calc($breakpoint_med_min - 1px);
+$breakpoint_lg_min: 1200px;
+$breakpoint_lg_max: calc($breakpoint_lg_min - 1px);

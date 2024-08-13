@@ -1,0 +1,123 @@
+<template>
+  <div
+    v-if="total > itemsPerPage"
+    class="container"
+  >
+    <div class="pager">
+      <a
+        v-if="start > 1"
+        data-testid="prev-page-link"
+        :title="`Prev page of ${itemName}`"
+        @click="prev"
+      >
+        <LeftArrowIcon />
+      </a>
+      <div
+        v-else
+        class="disabled"
+        data-testid="prev-page-disabled"
+      >
+        <LeftArrowIcon />
+      </div>
+      <div
+        class="pager-description"
+        data-testid="pager-text"
+      >
+        <b v-if="start !== end">{{ start }} to {{ end }}</b>
+        <b v-else> {{ start }}</b> of {{ total }} {{ itemName }}
+      </div>
+      <a
+        v-if="end !== total"
+        data-testid="next-page-link"
+        :title=" `Next page of ${itemName}`"
+        @click="next"
+      >
+        <RightArrowIcon />
+      </a>
+      <div
+        v-else
+        class="disabled"
+        data-testid="next-page-disabled"
+      >
+        <RightArrowIcon />
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { computed } from 'vue'
+import LeftArrowIcon from '../icons/LeftArrowIcon.vue'
+import RightArrowIcon from '../icons/RightArrowIcon.vue'
+
+export type Props = {
+  page: number,
+  itemsPerPage: number,
+  total: number,
+  itemName?: string
+}
+// Define the initial props.
+const props = withDefaults(
+  defineProps<Props>(),
+  {
+    page: 0,
+    itemsPerPage: 9,
+    itemName: 'services',
+    total: 0,
+  },
+)
+
+// Define the emits for the pager.
+const emit = defineEmits(['next', 'prev'])
+
+// Methods to emit standardly.
+function next() {
+  emit('next')
+}
+function prev() {
+  emit('prev')
+}
+
+// Compute the values of start and end for ease of use.
+const start = computed(() => props.page * props.itemsPerPage + 1)
+const end = computed(() => {
+  const proposedEnd = props.page * props.itemsPerPage + props.itemsPerPage
+  // If the next page would have more items than the total, just state the total.
+  return proposedEnd > props.total ? props.total : proposedEnd
+})
+</script>
+
+<style lang="scss" scoped>
+.container {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  padding: 20px 0;
+  width: 100%;
+}
+
+.pager {
+  align-items: center;
+  color: #3C4557;
+  display: flex;
+  font-size: 1.3rem;
+  gap: 2.5rem;
+  line-height: 2rem;
+  text-align: center;
+}
+
+a {
+  color: #1456CB;
+  line-height: 0;
+
+  &:hover {
+    color: #6e9df1
+  }
+}
+.disabled {
+  color: #A6C6FF;
+  cursor: not-allowed;
+  opacity: 0.5;
+  text-decoration: none;
+}
+</style>

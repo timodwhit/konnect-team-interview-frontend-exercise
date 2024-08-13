@@ -4,7 +4,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import ServiceCatalog from '@/components/ServiceCatalog.vue'
+import ServiceCatalog from '@/components/service/ServiceCatalog.vue'
 
 export default defineComponent({
   name: 'PageHome',
